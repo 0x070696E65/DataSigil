@@ -591,6 +591,8 @@ public class SymbolService
                 list.Add(inputData);
                 count++;
             }
+            Console.WriteLine("COUNT");
+            Console.WriteLine(list[0].Data.Count);
             if (DataBaseServices.AllInputDataWithPageNation.ContainsKey(registerdDataModel.mosaicId))
             {
                 DataBaseServices.AllInputDataWithPageNation.Remove(registerdDataModel.mosaicId);
@@ -601,8 +603,8 @@ public class SymbolService
     
     public async Task<InputDataWithPageNation> GetInputData(string mosaicId, bool isAdmin, int pageSize = 100, int pageNumber = 1, string order = "desc")
     {
-        var param = isAdmin ? $"/transactions/confirmed?transferMosaicId={mosaicId}&pageSize={pageSize}&pageNumber={pageNumber}&order={order}&embedded=true" 
-            : $"/transactions/confirmed?signerPublicKey={Account.PublicKey}&transferMosaicId={mosaicId}&pageSize={pageSize}&pageNumber={pageNumber}&order={order}&embedded=true";
+        var param = isAdmin ? $"/transactions/confirmed?transferMosaicId={mosaicId}&pageSize={pageSize}&pageNumber={pageNumber}&order={order}" 
+            : $"/transactions/confirmed?signerPublicKey={Account.PublicKey}&transferMosaicId={mosaicId}&pageSize={pageSize}&pageNumber={pageNumber}&order={order}";
         var json = await GetDataFromApi(Node, param);
         var jsonObject = JsonConvert.DeserializeObject<dynamic>(json);
         if (jsonObject.data.Count == 0)
@@ -617,18 +619,18 @@ public class SymbolService
         {
             foreach (var d in jsonObject.data)
             {
+                Console.WriteLine(d.ToString());
                 var byteArray = Converter.HexToBytes((string) d.transaction.message);
                 var str = Encoding.UTF8.GetString(byteArray, 1, byteArray.Length - 1);
-
                 
-                    var innerData = JsonConvert.DeserializeObject<InnerData>(str);
-                    if (d.transaction.type != 16724) continue;
-                    if (Facade.Network.epocTime != null)
-                        datas.Add(new InputDataModel(
-                                Facade.Network.epocTime.Value.AddMilliseconds(
-                                    long.Parse((string) d.meta.timestamp)),
-                                (string) d.transaction.signerPublicKey,
-                                innerData));
+                var innerData = JsonConvert.DeserializeObject<InnerData>(str);
+                if (d.transaction.type != 16724) continue;
+                if (Facade.Network.epocTime != null)
+                    datas.Add(new InputDataModel(
+                            Facade.Network.epocTime.Value.AddMilliseconds(
+                                long.Parse((string) d.meta.timestamp)),
+                            (string) d.transaction.signerPublicKey,
+                            innerData));
             }
         }
         catch
