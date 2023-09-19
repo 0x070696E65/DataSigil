@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="DataSigil.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:DataSigil.Views"
+    xmlns:dataSigil="clr-namespace:DataSigil"
+    Shell.FlyoutBehavior="Disabled"
+    >
+    <TabBar>
+        <Tab
+            Title="一覧"
+            Icon="home_mini.png">
+            <ShellContent ContentTemplate="{DataTemplate dataSigil:MainPage}" />
+        </Tab>
+        
+        <Tab
+            Title="登録"
+            Icon="form.png">
+            <ShellContent ContentTemplate="{DataTemplate views:RegisterDataPage}" />
+        </Tab>
+        
+        <Tab
+            Title="入力"
+            Icon="menu.png">
+            <ShellContent ContentTemplate="{DataTemplate views:InputDataPage}"/>
+        </Tab>
+        
+        <Tab
+            Title="リクエスト"
+            Icon="onboarding.png">
+            <ShellContent ContentTemplate="{DataTemplate views:RequestPage}"/>
+        </Tab>
+        
+        <Tab
+            Title="アカウント"
+            Icon="avatar.png">
+            <ShellContent ContentTemplate="{DataTemplate views:AccountPage}"/>
+        </Tab>
+    </TabBar>
+</Shell>

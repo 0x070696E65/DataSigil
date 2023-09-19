@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<controls:BasePopupPage
+    x:Class="DataSigil.Views.Actions.ObserveAccountPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:DataSigil.Controls"
+    xmlns:views="clr-namespace:DataSigil.Views"
+    Title="Action Success"
+    ForegroundColor="Transparent"
+    HorizontalOptions="{OnIdiom Phone='Fill',
+                              Tablet='Fill',
+                              Desktop='Center'}"
+    VerticalOptions="{OnIdiom Phone='End',
+                              Tablet='End',
+                              Desktop='Center'}">
+    <Border BackgroundColor="{DynamicResource MainWrapperBackgroundColor}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20,20,20,20" />
+        </Border.StrokeShape>
+        <StackLayout
+            Padding="20,30"
+            Spacing="16"
+            VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Style="{StaticResource Title1}"
+                Text="まだ途中!" />
+
+            <Label
+                FontFamily="MaterialDesign"
+                FontSize="60"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text="{x:Static views:MaterialDesignIcons.CheckBox}"
+                TextColor="{DynamicResource OkColor}"
+                VerticalOptions="Center" />
+            
+            <Label 
+                Text="アカウント作成のためのネットワーク手数料として数XYM程度必要です。&#xa;以下のアドレスに1XYMを送信してください&#xa;新たにデータを作成する場合はモザイク作成費用として50XYMが必要になります。状況に合わせて送信してください" Opacity="1.0" />
+            
+            <Entry
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                x:Name="Account" />
+            
+            <Label 
+                HorizontalOptions="Center"
+                Text="Waiting ..." Opacity="1.0" x:Name="blinkingLabel"/>
+            
+        </StackLayout>
+    </Border>
+</controls:BasePopupPage>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:handlers="clr-namespace:DataSigil.Handlers"
+             xmlns:views="clr-namespace:DataSigil.Views"
+             x:Class="DataSigil.Views.RequestPage"
+             x:DataType="views:PartialFieldItem">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout
+                HorizontalOptions="Center"
+                Spacing="5"
+                Padding="30,30"
+                VerticalOptions="FillAndExpand">
+                
+                <VerticalStackLayout>
+                    <Label HeightRequest="50" FontSize="20" HorizontalOptions="Center" Text="申請MosaicIDを入力してください"/>
+                    
+                    <HorizontalStackLayout HeightRequest="50" HorizontalOptions="Center">
+                        <Label Text="MosaicID"
+                               WidthRequest="80"
+                               Margin="0, 0, 20, 0"
+                               VerticalOptions="Center"
+                        ></Label>
+                        <Border
+                            Padding="20,5"
+                            WidthRequest="600"
+                            Margin="0, 0, 20, 0"
+                            BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                            <handlers:BorderlessEntry
+                                x:Name="MosaicID"
+                                Keyboard="Default"
+                                IsTextPredictionEnabled="False"
+                                HeightRequest="42"
+                                Placeholder="MosaicIDを入力してください"
+                                PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                                TextColor="{DynamicResource BaseTextColor}" />
+                        </Border>
+                    </HorizontalStackLayout>
+                    <StackLayout Margin="0, 50, 0, 0">
+                        <Button
+                            BackgroundColor="{DynamicResource PrimaryColor}"
+                            CornerRadius="14"
+                            FontAttributes="Bold"
+                            HeightRequest="50"
+                            Clicked="OnRequestButtonClicked"
+                            Text="申請"
+                            WidthRequest="200"
+                            HorizontalOptions="Center"
+                            Margin="0, 0, 0, 0"
+                            TextColor="{DynamicResource White}" />
+                    </StackLayout>
+                </VerticalStackLayout>
+                <ListView
+                    Margin="0, 50, 0, 0"
+                    x:Name="PartialFieldItemsView"
+                    RowHeight="60"
+                    SeparatorVisibility="None"
+                    BackgroundColor="{DynamicResource MainWrapperBackgroundColor}" >
+                    
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.RowDefinitions></Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        <ColumnDefinition Width="3*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Label 
+                                        Grid.Column="0"
+                                        Text="{Binding Address}"
+                                        FontSize="20"
+                                        HeightRequest="42"
+                                        Margin="0,10, 20, 0"
+                                        Padding="20,5"/>
+                                    <Label
+                                        Grid.Column="1"
+                                        Text="{Binding MosaicID}"
+                                        FontSize="20"
+                                        HeightRequest="42"
+                                        Margin="0,10, 20, 0"
+                                        Padding="20,5"/>
+                                    <Label
+                                        Grid.Column="2"
+                                        Text="{Binding Hash}"
+                                        FontSize="10"
+                                        HeightRequest="42"
+                                        Margin="0,10, 20, 0"
+                                        Padding="20,5"/>
+                                    <Button
+                                        Grid.Column="3"
+                                        BackgroundColor="{DynamicResource PrimaryColor}"
+                                        CornerRadius="14"
+                                        FontAttributes="Bold"
+                                        HeightRequest="50"
+                                        Clicked="OnApproveButtonClicked"
+                                        Text="承認"
+                                        HorizontalOptions="Center"
+                                        TextColor="{DynamicResource White}" />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.Header>
+                        <Grid>
+                            <Grid.RowDefinitions></Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label 
+                                Grid.Column="0"
+                                Text="Address"
+                                FontSize="20"
+                                HeightRequest="42"
+                                Margin="0,10, 20, 0"
+                                Padding="20,5"/>
+                            <Label
+                                Grid.Column="1"
+                                Text="MosaicID"
+                                FontSize="20"
+                                HeightRequest="42"
+                                Margin="0,10, 20, 0"
+                                Padding="20,5"/>
+                            <Label
+                                Grid.Column="2"
+                                Text="Hash"
+                                FontSize="20"
+                                HeightRequest="42"
+                                Margin="0,10, 20, 0"
+                                Padding="20,5"/>
+                        </Grid>
+                    </ListView.Header>
+                </ListView>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

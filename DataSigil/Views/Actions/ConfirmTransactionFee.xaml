@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:BasePopupPage
+    x:Class="DataSigil.Views.Actions.ConfirmTransactionFee"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:DataSigil.Controls"
+    Title="Action Success"
+    ForegroundColor="Transparent"
+    HorizontalOptions="{OnIdiom Phone='Fill',
+                              Tablet='Fill',
+                              Desktop='Center'}"
+    VerticalOptions="{OnIdiom Phone='End',
+                              Tablet='End',
+                              Desktop='Center'}">
+    <Border BackgroundColor="{DynamicResource MainWrapperBackgroundColor}">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="20,20,20,20" />
+        </Border.StrokeShape>
+        <StackLayout
+            Padding="20,30"
+            Spacing="16"
+            VerticalOptions="Center">
+            <Label
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Text="手数料を確認して送信ボタンを押してください" />
+
+            <Label
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                x:Name="TransactionName"
+                Text=""
+                VerticalOptions="Center" />
+
+            <Label
+                x:Name="TransactionFee"
+                HorizontalOptions="Center"
+                HorizontalTextAlignment="Center"
+                Text=""
+                VerticalOptions="Center" />
+
+            <Button
+                x:Name="ExcuteTransactionButton"
+                BackgroundColor="{DynamicResource PrimaryColor}"
+                CornerRadius="14"
+                HeightRequest="50"
+                Clicked="OnClickTransactionAnnounce"
+                Text="送信"
+                TextColor="{DynamicResource White}" />
+            
+        </StackLayout>
+    </Border>
+</controls:BasePopupPage>

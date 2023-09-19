@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<controls:BasePopupPage
+    x:Class="DataSigil.Views.Actions.ActionWarningPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:DataSigil.Controls"
+    xmlns:handlers="clr-namespace:DataSigil.Handlers"
+    xmlns:views="clr-namespace:DataSigil.Views"
+    Title="Action Call"
+    ForegroundColor="Transparent"
+    >
+    <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+        <Border>
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="20,20,20,20"/>
+            </Border.StrokeShape>
+            <StackLayout
+                Padding="20,30"
+                Spacing="16"
+                VerticalOptions="Center">
+                <Label
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center"
+                    Style="{StaticResource Title1}"
+                    Text="OOPS!" />
+
+                <Label
+                    FontFamily="MaterialDesign"
+                    FontSize="60"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Text="{x:Static views:MaterialDesignIcons.Warning}"
+                    TextColor="{DynamicResource Red}"
+                    VerticalOptions="Center" />
+
+                <Label
+                    x:Name="WarningText"
+                    HorizontalOptions="Center"
+                    HorizontalTextAlignment="Center"
+                    Text="" />
+
+                <Button
+                    BackgroundColor="{DynamicResource Red}"
+                    Clicked="GoBack_Clicked"
+                    CornerRadius="14"
+                    FontAttributes="Bold"
+                    HeightRequest="50"
+                    Text="Go Back"
+                    TextColor="{DynamicResource White}"
+                    WidthRequest="200" />
+            </StackLayout>
+        </Border>
+    </StackLayout>
+</controls:BasePopupPage>

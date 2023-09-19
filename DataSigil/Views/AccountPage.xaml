@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:DataSigil.ViewModels"
+             xmlns:handlers="clr-namespace:DataSigil.Handlers"
+             xmlns:utils="clr-namespace:DataSigil.Utils"
+             xmlns:services="clr-namespace:DataSigil.Services"
+             x:Class="DataSigil.Views.AccountPage"
+             >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <utils:DivideByMillionConverter x:Key="DivideByMillionConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                Spacing="5"
+                Padding="30,30"
+                VerticalOptions="Center">
+                
+                <Label 
+                    HeightRequest="50" 
+                    x:Name="UserName"
+                    FontSize="20" 
+                    HorizontalOptions="Center"/>
+                
+                <HorizontalStackLayout HeightRequest="50">
+                    <Label Text="PrivateKey"
+                           WidthRequest="80"
+                           Margin="0, 0, 20, 0"
+                           VerticalOptions="Center"
+                           ></Label>
+                    <Border
+                        Padding="20,5"
+                        WidthRequest="600"
+                        Margin="0, 0, 20, 0"
+                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                        <handlers:BorderlessEntry
+                            x:Name="PrivateKey"
+                            HeightRequest="42"
+                            Text="******************************************************"
+                            PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                            TextColor="{DynamicResource BaseTextColor}" />
+                    </Border>
+                    <Button
+                        BackgroundColor="{DynamicResource PrimaryColor}"
+                        CornerRadius="14"
+                        FontAttributes="Bold"
+                        HeightRequest="50"
+                        Clicked="OnShowPrivateKey"
+                        Text="SHOW"
+                        HorizontalOptions="End"
+                        Margin="0, 0, 0, 0"
+                        TextColor="{DynamicResource White}" />
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout HeightRequest="50">
+                    <Label Text="PublicKey"
+                           WidthRequest="80"
+                           Margin="0, 0, 20, 0"
+                           VerticalOptions="Center"
+                    ></Label>
+                    <Border
+                        Padding="20,5"
+                        WidthRequest="600"
+                        Margin="0, 0, 20, 0"
+                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                        <handlers:BorderlessEntry
+                            HeightRequest="42"
+                            x:Name="PublicKey"
+                            PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                            TextColor="{DynamicResource BaseTextColor}" />
+                    </Border>
+                </HorizontalStackLayout>
+                
+                <HorizontalStackLayout HeightRequest="50">
+                    <Label Text="Address"
+                           WidthRequest="80"
+                           Margin="0, 0, 20, 0"
+                           VerticalOptions="Center"
+                    ></Label>
+                    <Border
+                        Padding="20,5"
+                        WidthRequest="600"
+                        Margin="0, 0, 20, 0"
+                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                        <handlers:BorderlessEntry
+                            HeightRequest="42"
+                            x:Name="Address"
+                            PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                            TextColor="{DynamicResource BaseTextColor}" />
+                    </Border>
+                </HorizontalStackLayout>
+
+                <HorizontalStackLayout HeightRequest="50">
+                    <Label 
+                        Text="MosaicID"
+                        WidthRequest="80"
+                        Margin="0, 0, 20, 0"
+                        VerticalOptions="Center"
+                        />
+                    <Border
+                        WidthRequest="100"
+                        Margin="0,0, 20, 0" 
+                        Padding="20,5"
+                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                        <handlers:BorderlessPicker 
+                            x:Name="MosaicPicker"
+                            SelectedIndexChanged="MosaicIdSelectChanged"
+                            BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}"
+                            TextColor="{DynamicResource BaseTextColor}">
+                        </handlers:BorderlessPicker>
+                    </Border>
+                    <Border
+                        Padding="20,5"
+                        WidthRequest="200"
+                        Margin="0, 0, 20, 0"
+                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                        <handlers:BorderlessEntry
+                            HeightRequest="42"
+                            x:Name="MosaicId"
+                            PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                            TextColor="{DynamicResource BaseTextColor}" />
+                    </Border>
+                </HorizontalStackLayout>
+                
+                <StackLayout Margin="0, 50, 0, 0">
+                    <Label 
+                        FontSize="20"
+                        Text="{Binding XymAmount, Converter={StaticResource DivideByMillionConverter}, StringFormat='{0}XYM'}"
+                        HorizontalOptions="End" />
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

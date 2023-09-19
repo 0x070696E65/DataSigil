@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:handlers="clr-namespace:DataSigil.Handlers"
+    xmlns:models="clr-namespace:DataSigil.Models"
+    x:Class="DataSigil.Views.RegisterDataPage"
+    x:DataType="models:RegisterDataFieldItem">
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="5"
+            Padding="30,30"
+            VerticalOptions="Start">
+            
+            <Border
+                Padding="20,5"
+                WidthRequest="600"
+                HorizontalOptions="Start"
+                BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                <handlers:BorderlessEntry
+                    x:Name="Title"
+                    IsTextPredictionEnabled="False"
+                    HeightRequest="42"
+                    Keyboard="Default"
+                    Placeholder="タイトルを入力"
+                    PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                    TextColor="{DynamicResource BaseTextColor}" />
+            </Border>
+            
+            <HorizontalStackLayout>
+                <CheckBox
+                    HorizontalOptions="Fill"
+                    x:Name="IsEncrypt"
+                    IsChecked="False" 
+                    VerticalOptions="Center" />
+                <Label Text="暗号化" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            
+            <Button
+                BackgroundColor="{DynamicResource PrimaryColor}"
+                Clicked="AddColumnButtonClicked"
+                CornerRadius="14"
+                FontAttributes="Bold"
+                HeightRequest="50"
+                Text="フィールド追加"
+                HorizontalOptions="Start"
+                WidthRequest="500"
+                Margin="0, 10, 0, 30"
+                TextColor="{DynamicResource White}" />
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Text="項目名" Grid.Row="0" Grid.Column="0" />
+                <Label Text="データ型" Grid.Row="0" Grid.Column="1"/>
+                <Label Text="最大サイズ" Grid.Row="0" Grid.Column="2"/>
+            </Grid>
+            
+            <StackLayout
+                x:Name="MainTable"
+                HeightRequest="65">
+                <ListView 
+                    x:Name="itemListView"
+                    RowHeight="60"
+                    SeparatorVisibility="None"
+                    BackgroundColor="{DynamicResource MainWrapperBackgroundColor}"
+                >
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="80"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Border
+                                        Margin="0,10, 20, 0"
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Padding="20,5"
+                                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                                    <handlers:BorderlessEntry
+                                        Text="{Binding DataTitle}"
+                                        HeightRequest="42"
+                                        IsTextPredictionEnabled="False"
+                                        Keyboard="Default"
+                                        Placeholder="タイトルを入力"
+                                        PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                                        TextColor="{DynamicResource BaseTextColor}" />
+                                    </Border>
+                                    <Border 
+                                        Margin="0,10, 20, 0" 
+                                        Grid.Row="0" 
+                                        Grid.Column="1"
+                                        Padding="20,5"
+                                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                                    <handlers:BorderlessPicker 
+                                        x:Name="DataType"
+                                        SelectedItem="{Binding DataType}"
+                                        SelectedIndexChanged="DataTypePickerSelectedIndexChanged"
+                                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}"
+                                        TextColor="{DynamicResource BaseTextColor}">
+                                        <handlers:BorderlessPicker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>英数字のみ</x:String>
+                                                <x:String>日本語含む</x:String>
+                                            </x:Array>
+                                        </handlers:BorderlessPicker.ItemsSource>
+                                    </handlers:BorderlessPicker>
+                                    </Border>
+                                    <Border
+                                        Margin="0,10, 20, 0"
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        Padding="20,5"
+                                        BackgroundColor="{DynamicResource EntryAndEditorsBackgroundColor}">
+                                        <handlers:BorderlessEntry
+                                            Keyboard="Numeric"
+                                            IsTextPredictionEnabled="False"
+                                            Text="{Binding DataSize}"
+                                            HeightRequest="42"
+                                            Placeholder="最大サイズを入力"
+                                            TextChanged="OnNumberEntryTextChanged"
+                                            PlaceholderColor="{DynamicResource BaseLightTextColor}"
+                                            TextColor="{DynamicResource BaseTextColor}" />
+                                    </Border>
+                                    <Button
+                                        Margin="0, 10, 0, 0"
+                                        Grid.Row="0"
+                                        Grid.Column="3"
+                                        Text="削除"
+                                        Clicked="OnDeleteButtonClicked" 
+                                        BackgroundColor="{DynamicResource Gray700}"
+                                        FontAttributes="Bold"
+                                        CornerRadius="14"
+                                        TextColor="{DynamicResource White}"
+                                        CommandParameter="{Binding .}"
+                                        />
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <Button
+                VerticalOptions="Fill"
+                WidthRequest="500"
+                Margin="40"
+                BackgroundColor="{DynamicResource PrimaryColor}"
+                Clicked="FixDataButtonClicked"
+                CornerRadius="14"
+                FontAttributes="Bold"
+                HeightRequest="50"
+                Text="決定"
+                TextColor="{DynamicResource White}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
