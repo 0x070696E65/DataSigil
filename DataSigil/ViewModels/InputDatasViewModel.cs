@@ -76,9 +76,11 @@ public class InputDatasViewModel
         return RegisterdDataModels.ToList().Find(r => r.mosaicId == mosaicId).isEncrypt;
     }
 
-    public static string Decrypt(string encrypted, string publicKey, bool isMine)
+    public static async Task<string> Decrypt(string encrypted, string publicKey, bool isMine)
     {
-        var priv = isMine ? DataBaseServices.Account.PrivateKey : DataBaseServices.Account.MasterPrivateKey;
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var masterPrivateKeyStr = await SecureStorage.GetAsync("MasterPrivateKey");
+        var priv = isMine ? privateKeyStr : masterPrivateKeyStr;
         return SymbolService.Decrypt(encrypted, priv, publicKey);
     }
 
@@ -91,8 +93,9 @@ public class InputDatasViewModel
                 {"UserName", DataBaseServices.Account.Username}
             };
             
-            var dic = isEncrypt ? 
-                InputDataFieldItems.ToDictionary(inputDataFieldItem => inputDataFieldItem.DataTitle, inputDataFieldItem => SymbolService.Encrypt(inputDataFieldItem.DataContent, DataBaseServices.Account.PrivateKey, masterPublicKey)) : 
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var dic = isEncrypt ? 
+                InputDataFieldItems.ToDictionary(inputDataFieldItem => inputDataFieldItem.DataTitle, inputDataFieldItem => SymbolService.Encrypt(inputDataFieldItem.DataContent, privateKeyStr, masterPublicKey)) : 
                 InputDataFieldItems.ToDictionary(inputDataFieldItem => inputDataFieldItem.DataTitle, inputDataFieldItem => inputDataFieldItem.DataContent);
             data.Add("Items", dic);
             var tx = SymbolService.CreateInputDataTransaction(JsonConvert.SerializeObject(data), mosaicId, masterPublicKey, isEncrypt);

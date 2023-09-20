@@ -20,7 +20,7 @@ public partial class DataTable : ContentView
         InitializeDataTable();
     }
     
-    public void InitializeDataTable()
+    private void InitializeDataTable()
     {
         try
         {
@@ -46,7 +46,7 @@ public partial class DataTable : ContentView
         }
     }
     
-    private void CreateInputTable(string mosaicId, int pageNumber = 0, bool isFirst = true)
+    private async void CreateInputTable(string mosaicId, int pageNumber = 0, bool isFirst = true)
     {
         // InputDataWithPageNationプロパティの変更を監視し、UIを更新
         var mainLayout = new StackLayout
@@ -327,7 +327,7 @@ public partial class DataTable : ContentView
                             m.mosaicId == allInputDataWithPageNation.Data[i].Data.MosaicId);
                         var isMine = allInputDataWithPageNation.Data[i].SignerPublicKey == InputDatasViewModel.PublicKey;
                         var pub = isMine ? mosaic.masterPublicKey : allInputDataWithPageNation.Data[i].SignerPublicKey;
-                        text = InputDatasViewModel.Decrypt(allInputDataWithPageNation.Data[i].Data.Items.Properties().ToList()[j].Value.ToString(), pub, isMine);
+                        text = await InputDatasViewModel.Decrypt(allInputDataWithPageNation.Data[i].Data.Items.Properties().ToList()[j].Value.ToString(), pub, isMine);
                     }
                     else
                     {

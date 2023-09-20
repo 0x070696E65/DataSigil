@@ -65,10 +65,13 @@ public class SymbolService
         RegisterdDataModels = DataBaseServices.RegisterdDataModels;
     }
     
-    public AggregateCompleteTransactionV2 CreateAccountTransaction()
+    public async Task<AggregateCompleteTransactionV2> CreateAccountTransaction()
     {
-        var masterKeyPair = new KeyPair(new PrivateKey(Account.MasterPrivateKey));
-        var userKeyPair = new KeyPair(new PrivateKey(Account.PrivateKey));
+        var privateKey = await SecureStorage.GetAsync("PrivateKey");
+        var masterPrivateKey = await SecureStorage.GetAsync("MasterPrivateKey");
+        
+        var masterKeyPair = new KeyPair(new PrivateKey(masterPrivateKey));
+        var userKeyPair = new KeyPair(new PrivateKey(privateKey));
         var userAddress = Facade.Network.PublicKeyToAddress(userKeyPair.PublicKey);
         
         var multisigTransaction = new EmbeddedMultisigAccountModificationTransactionV1()
@@ -382,7 +385,8 @@ public class SymbolService
     
     public async Task<(string hash, string message)> AnnounceWithSignature(ITransaction transaction)
     {
-        var privateKey = new PrivateKey(Account.PrivateKey);
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var privateKey = new PrivateKey(privateKeyStr);
         var keyPair = new KeyPair(privateKey);
         var signature = Facade.SignTransaction(keyPair, transaction);
         var payload = TransactionsFactory.AttachSignature(transaction, signature);
@@ -393,7 +397,8 @@ public class SymbolService
     
     public async Task<(string hash, string message)> AnnounceWithSignatureBonded(ITransaction transaction)
     {
-        var privateKey = new PrivateKey(Account.PrivateKey);
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var privateKey = new PrivateKey(privateKeyStr);
         var keyPair = new KeyPair(privateKey);
         var signature = Facade.SignTransaction(keyPair, transaction);
         var payload = TransactionsFactory.AttachSignature(transaction, signature);
@@ -402,9 +407,10 @@ public class SymbolService
         return (hash.ToString(), message);
     }
 
-    public (Hash256 hash, string payload) SignByAdmin(ITransaction transaction)
+    public async Task<(Hash256 hash, string payload)> SignByAdmin(ITransaction transaction)
     {
-        var privateKey = new PrivateKey(Account.PrivateKey);
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var privateKey = new PrivateKey(privateKeyStr);
         var keyPair = new KeyPair(privateKey);
         var signature = Facade.SignTransaction(keyPair, transaction);
         var payload = TransactionsFactory.AttachSignature(transaction, signature);
@@ -414,7 +420,8 @@ public class SymbolService
 
     public async Task<string> AnnounceWithSignCosignature(string hash)
     {
-        var keyPair = new KeyPair(new PrivateKey(Account.PrivateKey));
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var keyPair = new KeyPair(new PrivateKey(privateKeyStr));
         var data = new Dictionary<string, string>()
         {
             {"parentHash", hash},
@@ -436,12 +443,14 @@ public class SymbolService
     
     public async Task<(string hash, string message)> AnnounceForMultisig(AggregateCompleteTransactionV2 transaction)
     {
-        var keyPair = new KeyPair(new PrivateKey(Account.PrivateKey));
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        var masterPrivateKeyStr = await SecureStorage.GetAsync("MasterPrivateKey");
+        var keyPair = new KeyPair(new PrivateKey(privateKeyStr));
         var signature = Facade.SignTransaction(keyPair, transaction);
         TransactionsFactory.AttachSignature(transaction, signature);
         var hash = Facade.HashTransaction(transaction);
 
-        var masterKeyPair = new KeyPair(new PrivateKey(Account.MasterPrivateKey));
+        var masterKeyPair = new KeyPair(new PrivateKey(masterPrivateKeyStr));
         var cosignature = new Cosignature
         {
             Signature = masterKeyPair.Sign(hash.bytes),
@@ -556,7 +565,6 @@ public class SymbolService
             foreach (var t in accountInfo.Account.Mosaics.Where(t => t.Id != CurrentNetoworkMosaicId))
             {
                 var json = await GetDataFromApi(Node,$"/metadata?&targetId={t.Id}");
-                Console.WriteLine(json);
                 var jsonObject = JsonConvert.DeserializeObject<dynamic>(json);
                 foreach (var meta in jsonObject.data)
                 {
@@ -591,8 +599,6 @@ public class SymbolService
                 list.Add(inputData);
                 count++;
             }
-            Console.WriteLine("COUNT");
-            Console.WriteLine(list[0].Data.Count);
             if (DataBaseServices.AllInputDataWithPageNation.ContainsKey(registerdDataModel.mosaicId))
             {
                 DataBaseServices.AllInputDataWithPageNation.Remove(registerdDataModel.mosaicId);
@@ -619,7 +625,6 @@ public class SymbolService
         {
             foreach (var d in jsonObject.data)
             {
-                Console.WriteLine(d.ToString());
                 var byteArray = Converter.HexToBytes((string) d.transaction.message);
                 var str = Encoding.UTF8.GetString(byteArray, 1, byteArray.Length - 1);
                 

@@ -57,35 +57,38 @@ public class AccountViewModel
     
     public static async Task CreateAccount(string userName, string password, INavigation Navigation, Func<Task<string>> func = null)
     {
-        var privateKey = PrivateKey.Random();
-        var keyPair = new KeyPair(privateKey);
+        var keyPair = new KeyPair(PrivateKey.Random());
         var publicKey = keyPair.PublicKey;
         var address = SymbolService.Facade.Network.PublicKeyToAddress(publicKey);
 
         Account.Username = userName;
-        Account.PrivateKey = Converter.BytesToHex(privateKey.bytes);
+        
+        var privateKey = Converter.BytesToHex(keyPair.PrivateKey.bytes);
         Account.PublicKey = Converter.BytesToHex(publicKey.bytes);
         Account.Address = address.ToString();
         
-        var masterPrivateKey = PrivateKey.Random();
-        var masterKeyPair = new KeyPair(masterPrivateKey);
+        var masterKeyPair = new KeyPair(PrivateKey.Random());
         var masterPublicKey = masterKeyPair.PublicKey;
         var masterAddress = SymbolService.Facade.Network.PublicKeyToAddress(masterPublicKey);
 
-        Account.MasterPrivateKey = Converter.BytesToHex(masterPrivateKey.bytes);
+        var masterPrivateKey = Converter.BytesToHex(masterKeyPair.PrivateKey.bytes);
         Account.MasterPublicKey = Converter.BytesToHex(masterPublicKey.bytes);
         Account.MasterAddress = masterAddress.ToString();
  
-        var encryptedPrivateKey = Crypto.EncryptString(Account.PrivateKey, password, Account.Address);
+        var encryptedPrivateKey = Crypto.EncryptString(privateKey, password, Account.Address);
         await SecureStorage.SetAsync("EncryptedPrivateKey", encryptedPrivateKey);
         await SecureStorage.SetAsync("Username", Account.Username);
         await SecureStorage.SetAsync("Address", Account.Address);
             
-        var encryptedMasterPrivateKey = Crypto.EncryptString(Account.MasterPrivateKey, password, Account.MasterAddress);
+        var encryptedMasterPrivateKey = Crypto.EncryptString(masterPrivateKey, password, Account.MasterAddress);
         await SecureStorage.SetAsync("EncryptedMasterPrivateKey", encryptedMasterPrivateKey);
         await SecureStorage.SetAsync("MasterAddress", Account.MasterAddress);
         
-        Console.WriteLine(@"PrivateKey: " + Account.PrivateKey);
+        // アプリクローズ時に削除する
+        await SecureStorage.SetAsync("PrivateKey", privateKey);
+        await SecureStorage.SetAsync("MasterPrivateKey", masterPrivateKey);
+        
+        Console.WriteLine(@"PrivateKey: " + privateKey);
 
         func?.Invoke();
         SetWebsockets();
@@ -96,7 +99,7 @@ public class AccountViewModel
             await SymbolService.GetAccountInfo(Account.PublicKey);
             SymbolService.SetXymAmount();
             
-            var aggregateTransaction = SymbolService.CreateAccountTransaction();
+            var aggregateTransaction = await SymbolService.CreateAccountTransaction();
             await Navigation.PopModalAsync();
             
             async Task Func()
@@ -133,7 +136,6 @@ public class AccountViewModel
             var publicKey = new KeyPair(new PrivateKey(privateKey)).PublicKey.ToString();
             
             Account.Username = userName;
-            Account.PrivateKey = privateKey;
             Account.PublicKey = publicKey;
             Account.Address = address;
             
@@ -141,11 +143,13 @@ public class AccountViewModel
             var masterAddress = await SecureStorage.GetAsync("MasterAddress");
             var masterPrivateKey = Crypto.DecryptString(encryptedMasterPrivateKey, password, masterAddress);
 
-            Account.MasterPrivateKey = masterPrivateKey;
             var masterPublicKey = new KeyPair(new PrivateKey(masterPrivateKey)).PublicKey.ToString();
             Account.MasterPublicKey = masterPublicKey;
             Account.MasterAddress = masterAddress;
             
+            // アプリクローズ時に削除する
+            await SecureStorage.SetAsync("PrivateKey", privateKey);
+            await SecureStorage.SetAsync("MasterPrivateKey", masterPrivateKey);
             Console.WriteLine(JsonConvert.SerializeObject(Account));
             return true;
         }

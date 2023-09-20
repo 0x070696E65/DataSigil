@@ -122,7 +122,6 @@ public class ListenerService
             var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             var receivedMessage = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
             var json = JsonNode.Parse(receivedMessage);
-            Console.WriteLine(json);
             if((string)json["topic"] == "cosignature/" + address)
                 callback?.Invoke(json["data"]);
         }
@@ -169,8 +168,6 @@ public class ListenerService
         
         await websocket.PartialRemoved(address, (tx) =>
         {
-            Console.WriteLine("REMOVED");
-            Console.WriteLine(tx);
             if ((string)tx["meta"]?["hash"] == hash)
             {
                 action?.Invoke();

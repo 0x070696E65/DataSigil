@@ -36,7 +36,7 @@ public class RequestViewModel
     public static async Task<string> Request(string mosaicID, INavigation Navigation, Action action)
     {
         var applyDataTransaction = await SymbolService.CreateApplyDataTransaction(mosaicID);
-        var aggregateHashAndpayload = SymbolService.SignByAdmin(applyDataTransaction);
+        var aggregateHashAndpayload = await SymbolService.SignByAdmin(applyDataTransaction);
         var hashTransaction = SymbolService.CreateHashLockTransaction(aggregateHashAndpayload.hash);
         var _hash = "";
         async Task Func()

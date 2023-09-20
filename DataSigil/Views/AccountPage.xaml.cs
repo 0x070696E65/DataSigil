@@ -33,7 +33,8 @@ public partial class AccountPage : ContentPage
     private async void OnShowPrivateKey(object sender, EventArgs e)
     {
         var privateKeyEntry = this.FindByName<BorderlessEntry>("PrivateKey");
-        privateKeyEntry.Text = DataBaseServices.Account.PrivateKey;
+        var privateKeyStr = await SecureStorage.GetAsync("PrivateKey");
+        privateKeyEntry.Text = privateKeyStr;
         await Task.Delay(10000);
         privateKeyEntry.Text = "******************************************************";
     }

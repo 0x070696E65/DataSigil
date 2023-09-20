@@ -71,6 +71,20 @@ public partial class App : Application
             MainPage = new NavigationPage(new LoginPage());
         }
     }
+
+    protected override Window CreateWindow(IActivationState activationState)
+    {
+        var window = base.CreateWindow(activationState);
+
+        window.Destroying += (s, e) =>
+        {
+            // 秘密鍵の削除
+            SecureStorage.Remove("PrivateKey");
+            SecureStorage.Remove("MasterPrivateKey");
+        };
+
+        return window;
+    }
     
     private static IServiceProvider ConfigureServices()
     {
