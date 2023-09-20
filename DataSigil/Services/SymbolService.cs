@@ -94,7 +94,7 @@ public class SymbolService
         var merkleHash = SymbolFacade.HashEmbeddedTransactions(innerTransactions);
         var aggregateTx = new AggregateCompleteTransactionV2()
         {
-            Network = NetworkType.TESTNET,
+            Network = NetworkType,
             SignerPublicKey = userKeyPair.PublicKey,
             Deadline = new Timestamp(Facade.Network.FromDatetime<NetworkTimestamp>(DateTime.UtcNow).AddHours(2).Timestamp),
             Transactions = innerTransactions,
@@ -246,7 +246,7 @@ public class SymbolService
                 {
                     MosaicId = new UnresolvedMosaicId(ulong.Parse(mosaicId, System.Globalization.NumberStyles.HexNumber)),
                     Amount = new Amount()
-                }  
+                }
             },
             Message = CombineByteArrays(headerByte, messageBytes),
         };
@@ -281,7 +281,7 @@ public class SymbolService
         
         var mosaicAddressResTx = new EmbeddedMosaicAddressRestrictionTransactionV1()
         {
-            Network = NetworkType.TESTNET,
+            Network = NetworkType,
             SignerPublicKey = masterPublicKey,
             MosaicId = new UnresolvedMosaicId(Convert.ToUInt64(mosaicId, 16)),
             RestrictionKey = Key,
@@ -344,7 +344,7 @@ public class SymbolService
     {
         var hashLockTx = new HashLockTransactionV1()
         {
-            Network = NetworkType.TESTNET,
+            Network = NetworkType,
             SignerPublicKey = new PublicKey(Converter.HexToBytes(Account.PublicKey)),
             Mosaic = new UnresolvedMosaic() //10xym固定値
             {
