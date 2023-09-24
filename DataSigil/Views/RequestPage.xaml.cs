@@ -1,11 +1,5 @@
 using System.Collections.ObjectModel;
-using CommunityToolkit.Maui.Alerts;
-using DataSigil.Handlers;
-using DataSigil.Models;
-using DataSigil.Scripts;
-using DataSigil.Services;
 using DataSigil.ViewModels;
-using DataSigil.Views.Actions;
 
 namespace DataSigil.Views;
 

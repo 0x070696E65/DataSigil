@@ -7,10 +7,10 @@ using DataSigil.Views.Actions;
 
 namespace DataSigil.ViewModels;
 
-public class RequestViewModel
+public abstract class RequestViewModel
 {
-    public static SymbolService SymbolService => App.ServiceProvider.GetRequiredService<SymbolService>();
-    public static DataBaseServices DataBaseServices => App.ServiceProvider.GetRequiredService<DataBaseServices>();
+    private static SymbolService SymbolService => App.ServiceProvider.GetRequiredService<SymbolService>();
+    private static DataBaseServices DataBaseServices => App.ServiceProvider.GetRequiredService<DataBaseServices>();
 
     public static ObservableCollection<PartialModel> PartialModels
     {

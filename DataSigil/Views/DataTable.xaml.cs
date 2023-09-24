@@ -1,7 +1,5 @@
 using System.Globalization;
 using DataSigil.Handlers;
-using DataSigil.Models;
-using DataSigil.Services;
 using DataSigil.ViewModels;
 
 namespace DataSigil.Views;

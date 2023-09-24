@@ -1,10 +1,6 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
-using System.Windows.Input;
 using CommunityToolkit.Maui.Alerts;
 using DataSigil.Extends;
-using DataSigil.Handlers;
 using DataSigil.Models;
 using DataSigil.Services;
 using DataSigil.Views;
@@ -19,7 +15,6 @@ public class InputDatasViewModel
     private static DataBaseServices DataBaseServices => App.ServiceProvider.GetRequiredService<DataBaseServices>();
 
     public static readonly string PublicKey = DataBaseServices.Account.PublicKey;
-    public static readonly string MasterPublicKey = DataBaseServices.Account.MasterPublicKey;
     
     public static ObservableCollection<RegisterdDataModel> RegisterdDataModels
     {

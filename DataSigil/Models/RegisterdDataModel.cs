@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace DataSigil.Models;
 
 public class RegisterdDataModel

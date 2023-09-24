@@ -1,5 +1,4 @@
 using DataSigil.ViewModels;
-using NETWORK = CatSdk.Symbol.Network;
 namespace DataSigil.Views;
 
 public partial class LoginPage : ContentPage
