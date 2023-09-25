@@ -354,17 +354,4 @@ public partial class DataTable : ContentView
             Content = mainLayout;   
         }
     }
-    
-    public static string AbbreviateString(string input, int maxLength)
-    {
-        if (string.IsNullOrEmpty(input) || input.Length <= maxLength)
-        {
-            return input;
-        }
-
-        var halfLength = (maxLength - 3) / 2;
-        var abbreviated = input.Substring(0, halfLength) + "..." + input.Substring(input.Length - halfLength);
-
-        return abbreviated;
-    }
 }

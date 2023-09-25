@@ -6,7 +6,6 @@ using CatSdk.Symbol;
 using CatSdk.Utils;
 using CommunityToolkit.Maui.Alerts;
 using DataSigil.Models;
-using DataSigil.Scripts;
 using DataSigil.Services;
 using DataSigil.Views;
 using DataSigil.Views.Actions;
@@ -218,8 +217,9 @@ public class AccountViewModel
     public static async Task<bool> ObserveAccountOverAmount(ulong amount)
     {
         var tcs = new TaskCompletionSource<bool>();
-        
-        var websocket = new ListenerService(SymbolService.Node, new ClientWebSocket());
+
+        using var w = new ClientWebSocket();
+        var websocket = new ListenerService(SymbolService.Node, w);
         await websocket.Open();
         Console.WriteLine(Account.Address);
         Task.Run(async () =>

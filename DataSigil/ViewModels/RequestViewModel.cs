@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using DataSigil.Models;
-using DataSigil.Scripts;
 using DataSigil.Services;
 using DataSigil.Views.Actions;
 

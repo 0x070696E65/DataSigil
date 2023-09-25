@@ -9,7 +9,6 @@ using CatSdk.Symbol;
 using CatSdk.Symbol.Factory;
 using CatSdk.Utils;
 using DataSigil.Models;
-using DataSigil.Scripts;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SymbolRestClient.Model;
@@ -796,10 +795,6 @@ public class SymbolService
             }   
         }
     }
-
-    private ListenerService websocket;
-    private ListenerService websocketForMaster;
-    private ListenerService websocketBoded;
     
     public readonly Dictionary<string, Func<JsonNode, Task>> FuncList = new Dictionary<string, Func<JsonNode, Task>>();
     public void DeleteFunc(string key)
@@ -821,11 +816,11 @@ public class SymbolService
     
     public async void SetupWebSocketConfirmedForMaster()
     {
-        websocketForMaster = new ListenerService(Node, new ClientWebSocket());
-        await websocketForMaster.Open();
-        await websocketForMaster.Confirmed(Account.MasterAddress, (tx) =>
+        using var clientWebSocket = new ClientWebSocket();
+        var listenerService = new ListenerService(Node, clientWebSocket);
+        await listenerService.Open();
+        await listenerService.Confirmed(Account.MasterAddress, (tx) =>
         {
-            Console.WriteLine("RECIEVED");
             foreach (var funcKeyValuePair in FuncListForMaster)
             {
                 funcKeyValuePair.Value?.Invoke(tx);
@@ -835,9 +830,10 @@ public class SymbolService
     
     public async void SetupWebSocketConfirmed()
     {
-        websocket = new ListenerService(Node, new ClientWebSocket());
-        await websocket.Open();
-        await websocket.Confirmed(Account.Address, (tx) =>
+        using var clientWebSocket = new ClientWebSocket();
+        var listenerService = new ListenerService(Node, clientWebSocket);
+        await listenerService.Open();
+        await listenerService.Confirmed(Account.Address, (tx) =>
         {
             foreach (var funcKeyValuePair in FuncList)
             {
@@ -848,9 +844,10 @@ public class SymbolService
     
     public async void SetupWebSocketPartial()
     {
-        websocketBoded = new ListenerService(Node, new ClientWebSocket());
-        await websocketBoded.Open();
-        await websocketBoded.AggregateBondedAdded(Account.MasterAddress, (tx) =>
+        using var clientWebSocket = new ClientWebSocket();
+        var listenerService = new ListenerService(Node, clientWebSocket);
+        await listenerService.Open();
+        await listenerService.AggregateBondedAdded(Account.MasterAddress, (tx) =>
         {
             foreach (var funcKeyValuePair in BondedFuncList)
             {

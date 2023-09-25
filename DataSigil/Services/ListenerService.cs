@@ -1,15 +1,14 @@
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json.Nodes;
-using CommunityToolkit.Maui.Alerts;
 
-namespace DataSigil.Scripts;
+namespace DataSigil.Services;
 
 public class ListenerService
 {
-    public readonly string uri;
-    public readonly ClientWebSocket webSocket;
-    public string uid;
+    private readonly string uri;
+    private readonly ClientWebSocket webSocket;
+    private string uid;
     
     public ListenerService(string _uri, ClientWebSocket _webSocket)
     {
@@ -21,13 +20,13 @@ public class ListenerService
         webSocket = _webSocket;
         uid = "";
     }
-
+    
     public async Task Open()
     {
         Console.WriteLine(uri);
         var serverUri = new Uri(uri);
         await webSocket.ConnectAsync(serverUri, CancellationToken.None);
-        Console.WriteLine("Connected to Symbol node WebSocket server.");
+        Console.WriteLine(@"Connected to Symbol node WebSocket server.");
 
         var buffer = new byte[256];
         var receiveResult = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
@@ -97,7 +96,7 @@ public class ListenerService
         }
     }
     
-    public async Task PartialRemoved(string address, Action<JsonNode> callback = null)
+    private async Task PartialRemoved(string address, Action<JsonNode> callback = null)
     {
         var body = Encoding.UTF8.GetBytes("{\"uid\":\"" + uid + "\", \"subscribe\":\"partialRemoved/" + address + "\"}");
         await webSocket.SendAsync(new ArraySegment<byte>(body), WebSocketMessageType.Text, true, CancellationToken.None);
@@ -112,7 +111,7 @@ public class ListenerService
         }
     }
     
-    public async Task Cosignature(string address, Action<JsonNode> callback = null)
+    private async Task Cosignature(string address, Action<JsonNode> callback = null)
     {
         var body = Encoding.UTF8.GetBytes("{\"uid\":\"" + uid + "\", \"subscribe\":\"cosignature/" + address + "\"}");
         await webSocket.SendAsync(new ArraySegment<byte>(body), WebSocketMessageType.Text, true, CancellationToken.None);
@@ -136,7 +135,8 @@ public class ListenerService
     
     public static async Task SetupWebsocket(string node, string address, string hash, Func<Task> action = null)
     {
-        var websocket = new ListenerService(node, new ClientWebSocket());
+        using var w = new ClientWebSocket();
+        var websocket = new ListenerService(node, w);
         await websocket.Open();
         
         await websocket.Confirmed(address, (tx) =>
@@ -151,7 +151,8 @@ public class ListenerService
     
     public static async Task SetupWebsocketCosignature(string node, string address, Func<Task> action = null)
     {
-        var websocket = new ListenerService(node, new ClientWebSocket());
+        using var w = new ClientWebSocket();
+        var websocket = new ListenerService(node, w);
         await websocket.Open();
         
         await websocket.Cosignature(address, (tx) =>
@@ -163,7 +164,8 @@ public class ListenerService
     
     public static async Task SetupWebsocketPartialRemoved(string node, string address, string hash, Func<Task> action = null)
     {
-        var websocket = new ListenerService(node, new ClientWebSocket());
+        using var w = new ClientWebSocket();
+        var websocket = new ListenerService(node, w);
         await websocket.Open();
         
         await websocket.PartialRemoved(address, (tx) =>
